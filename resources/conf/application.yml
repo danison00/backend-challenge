@@ -23,3 +23,10 @@ server:
   health-check:
     enabled: true
     url: "/api/internal/health-check"
+
+  db:
+    datasources:
+      default:
+        jdbc-url: "jdbc:mysql://localhost:3306/tasks_db"
+        username: "root"
+        password: "mysql"
