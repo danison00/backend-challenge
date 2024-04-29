@@ -5,7 +5,8 @@ import backend.challenge.modules.task.infra.http.views.TaskView;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.services.*;
 import kikaha.urouting.api.*;
-
+import java.util.Optional;
+import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -21,30 +22,33 @@ public class TaskController {
 
 	@Inject
 	public TaskController(
-		final ICreateTaskService createTaskService,
-		final IDeleteTaskService deleteTaskService,
-		final IRetrieveAllTasksService retrieveAllTasksService
-	) {
+			final ICreateTaskService createTaskService,
+			final IDeleteTaskService deleteTaskService,
+			final IRetrieveAllTasksService retrieveAllTasksService,
+			final RetrieveTaskByIdService retrieveTaskByIdService) {
 		this.createTaskService = createTaskService;
 		this.deleteTaskService = deleteTaskService;
 		this.retrieveAllTasksService = retrieveAllTasksService;
-		this.retrieveTaskByIdService = null;
+		this.retrieveTaskByIdService = retrieveTaskByIdService;
 		this.updateTaskService = null;
 	}
 
 	@GET
 	public Response show() {
-		// TODO: Rota que lista todas as tarefas
 
-		return DefaultResponse.ok().entity("Hello world");
+		this.retrieveAllTasksService.execute();
+
+		return DefaultResponse.ok().entity(retrieveAllTasksService.execute());
 	}
 
 	@GET
 	@Path("single/{taskId}")
-	public Response index(@PathParam("taskId") Long taskId) {
-		// TODO: A rota deve retornar somente a tarefa a qual o id corresponder
+	public Response index(@PathParam("taskId") String taskId) {
 
-		return DefaultResponse.ok().entity("Hello world");
+		Optional<Task> taskOpt = this.retrieveTaskByIdService.execute(UUID.fromString(taskId));
+		if (taskOpt.isEmpty())
+			return DefaultResponse.badRequest();
+		return DefaultResponse.ok().entity(taskOpt.get());
 	}
 
 	@POST
@@ -53,15 +57,15 @@ public class TaskController {
 		TaskDTO taskDto = TaskDTO.create().setTitle(taskView.getTitle()).setDescription(taskView.getDescription());
 		this.createTaskService.execute(taskDto);
 
-		return DefaultResponse.ok().entity("Hello world");
+		return DefaultResponse.created();
 	}
 
 	@PUT
 	@Path("single/{taskId}")
 	public Response update(@PathParam("taskId") Long taskId, Task task) {
 		/*
-			TODO:  A rota deve alterar apenas o title e description da tarefa
-			 			 que possua o id igual ao id correspondente nos parâmetros da rota.
+		 * TODO: A rota deve alterar apenas o title e description da tarefa
+		 * que possua o id igual ao id correspondente nos parâmetros da rota.
 		 */
 
 		return DefaultResponse.ok().entity("Hello world");
@@ -70,7 +74,8 @@ public class TaskController {
 	@DELETE
 	@Path("single/{taskId}")
 	public Response delete(@PathParam("taskId") Long taskId) {
-		// TODO: A rota deve deletar a tarefa com o id correspondente nos parâmetros da rota
+		// TODO: A rota deve deletar a tarefa com o id correspondente nos parâmetros da
+		// rota
 
 		return DefaultResponse.ok().entity("Hello world");
 	}

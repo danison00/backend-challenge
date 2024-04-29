@@ -16,7 +16,7 @@ public class CreateTaskServiceTest {
 	@Before
 	public void init() {
 		final ITaskRepository taskRepository = new TaskRepository();
-
+		
 		createTaskService = new CreateTaskService(taskRepository);
 	}
 

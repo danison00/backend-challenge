@@ -30,8 +30,27 @@ public class TaskRepository implements ITaskRepository {
 	@Override
 	public Optional<Task> index(final UUID taskId) {
 		// TODO: Criar método responsável por retornar tarefa por id
-		
-		return null;
+		try (Connection connection = this.db.getConnection()) {
+            String sql = "SELECT id, title, description, createdAt FROM tasks WHERE id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, taskId.toString());
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			Task task = null;
+			if(resultSet.next()){
+				task = new Task();
+				task.setId(UUID.fromString(resultSet.getString("id")));
+                task.setTitle(resultSet.getString("title"));
+                task.setDescription(resultSet.getString("description"));
+                task.setCreatedAt(resultSet.getTimestamp("createdAt").toLocalDateTime());
+				return Optional.of(task);
+			}
+			return Optional.empty();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -47,27 +66,28 @@ public class TaskRepository implements ITaskRepository {
 		try (Connection connection = this.db.getConnection()) {
 			String sql = "INSERT INTO tasks(id, title, description, createdAt) VALUES(?, ?, ?, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			Task newTask = new Task(
-					UUID.randomUUID(),
-					taskDTO.getTitle(),
-					taskDTO.getDescription(),
-					0,
-					TaskStatus.PROGRESS,
-					LocalDateTime.now()
+			Task newTask = new Task( 
+				UUID.randomUUID(),
+				taskDTO.getTitle(),
+				taskDTO.getDescription(),
+				0,
+				TaskStatus.PROGRESS,
+				LocalDateTime.now()
 
 			);
-
+			
 			preparedStatement.setString(1, newTask.getId().toString());
 			preparedStatement.setString(2, newTask.getTitle());
 			preparedStatement.setString(3, newTask.getDescription());
-			preparedStatement.setTimestamp(4, Timestamp.valueOf(newTask.getCreatedAt()));
+			preparedStatement.setTimestamp(4,  Timestamp.valueOf(newTask.getCreatedAt()));
 			preparedStatement.executeUpdate();
-
+			
 			return newTask;
-
+			
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+
 
 	}
 
