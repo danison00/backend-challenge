@@ -1,4 +1,4 @@
-package backend.challenge;
+// package backend.challenge;
 
 import kikaha.core.test.KikahaServerRunner;
 import org.junit.Ignore;

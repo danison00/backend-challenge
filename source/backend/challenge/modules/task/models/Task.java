@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,6 +17,6 @@ public class Task {
 	private String description;
 	private int progress;
 	private TaskStatus status;
-	private Date createdAt;
+	private LocalDateTime createdAt;
 
 }

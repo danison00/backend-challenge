@@ -20,7 +20,7 @@ public class CreateTaskService implements ICreateTaskService {
 	@Override
 	public Task execute(TaskDTO taskDTO) {
 		// TODO: Criar serviço responsável por criar uma tarefa
-
+		taskRepository.create(taskDTO);
 		return null;
 	}
 

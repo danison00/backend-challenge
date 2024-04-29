@@ -1,5 +1,6 @@
 package backend.challenge.modules.task.infra.http.controllers;
 
+import backend.challenge.modules.task.dtos.TaskDTO;
 import backend.challenge.modules.task.infra.http.views.TaskView;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.services.*;
@@ -47,8 +48,10 @@ public class TaskController {
 	}
 
 	@POST
-	public Response create(TaskView task) {
-		// TODO: A rota deve receber title e description, sendo o `title` o título da tarefa e `description` uma descrição da tarefa.
+	public Response create(TaskView taskView) {
+
+		TaskDTO taskDto = TaskDTO.create().setTitle(taskView.getTitle()).setDescription(taskView.getDescription());
+		this.createTaskService.execute(taskDto);
 
 		return DefaultResponse.ok().entity("Hello world");
 	}
