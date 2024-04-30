@@ -6,7 +6,7 @@ import javax.enterprise.inject.Typed;
 import javax.inject.Singleton;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-
+import java.util.UUID;
 import kikaha.urouting.api.AbstractConverter;
 import kikaha.urouting.api.ConversionException;
 
@@ -15,10 +15,10 @@ import kikaha.urouting.api.ConversionException;
  */
 @Singleton
 @Typed(AbstractConverter.class)
-public class UUIDConverter extends AbstractConverter{
+public class UUIDConverter extends AbstractConverter<UUID>{
 
     @Override
-    public Object convert(String value) throws ConversionException {
+    public UUID convert(String value) throws ConversionException {
 
         try {
             return UUID.fromString(value);
