@@ -2,6 +2,7 @@ package backend.challenge.modules.task.models;
 
 import backend.challenge.modules.task.enums.TaskStatus;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import javax.xml.crypto.Data;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class Task {
 
 	private UUID id;

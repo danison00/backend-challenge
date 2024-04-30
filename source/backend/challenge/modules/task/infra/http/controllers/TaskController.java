@@ -38,7 +38,6 @@ public class TaskController {
 
 	@GET
 	public Response show() {
-		this.retrieveAllTasksService.execute();
 		return DefaultResponse.ok().entity(retrieveAllTasksService.execute());
 	}
 
