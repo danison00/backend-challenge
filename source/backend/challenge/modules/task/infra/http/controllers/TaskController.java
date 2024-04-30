@@ -1,6 +1,7 @@
 package backend.challenge.modules.task.infra.http.controllers;
 
 import backend.challenge.modules.task.dtos.TaskDTO;
+import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.infra.http.views.TaskView;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.services.*;
@@ -44,10 +45,14 @@ public class TaskController {
 	@Path("single/{taskId}")
 	public Response index(@PathParam("taskId") String taskId) {
 
-		Optional<Task> taskOpt = this.retrieveTaskByIdService.execute(UUID.fromString(taskId));
-		if (taskOpt.isEmpty())
-			return DefaultResponse.badRequest();
-		return DefaultResponse.ok().entity(taskOpt.get());
+		try {
+			Task taskOpt = this.retrieveTaskByIdService.execute(UUID.fromString(taskId));
+			return DefaultResponse.ok().entity(taskOpt);
+
+		} catch (TaskNotFound e) {
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		}
+
 	}
 
 	@POST
@@ -65,7 +70,7 @@ public class TaskController {
 
 		this.updateTaskService.execute(task);
 
-		return DefaultResponse.ok().entity("Hello world");
+		return DefaultResponse.ok();
 	}
 
 	@DELETE
