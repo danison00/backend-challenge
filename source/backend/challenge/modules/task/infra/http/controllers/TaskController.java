@@ -1,6 +1,7 @@
 package backend.challenge.modules.task.infra.http.controllers;
 
 import backend.challenge.modules.task.dtos.TaskDTO;
+import backend.challenge.modules.task.exceptions.TaskAlterationNotAvaliable;
 import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.infra.http.views.TaskView;
 import backend.challenge.modules.task.models.Task;
@@ -66,11 +67,23 @@ public class TaskController {
 
 	@PUT
 	@Path("single/{taskId}")
-	public Response update(@PathParam("taskId") String taskId, Task task) {
+	public Response update(@PathParam("taskId") String taskId, TaskDTO taskDto) {
 
-		this.updateTaskService.execute(task);
+		try {
+			Task task = new Task();
+			task.setId(UUID.fromString(taskId));
+			task.setDescription(taskDto.getDescription());
+			task.setTitle(taskDto.getTitle());
+			this.updateTaskService.execute(task);
+			return DefaultResponse.ok();
+		} catch (TaskAlterationNotAvaliable | TaskNotFound e) {
 
-		return DefaultResponse.ok();
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		} catch (Exception e) {
+			return DefaultResponse.serverError();
+		}
+
+		// return DefaultResponse.ok();
 	}
 
 	@DELETE

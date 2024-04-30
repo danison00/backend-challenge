@@ -44,7 +44,7 @@ public class TaskRepository implements ITaskRepository {
 				task.setDescription(resultSet.getString("description"));
 				task.setStatus(TaskStatus.valueOf(resultSet.getString("status")));
 				task.setProgress(resultSet.getInt("progress"));
-				task.setCreatedAt(resultSet.getTimestamp("createdAt").toLocalDateTime());
+				task.setCreatedAt(resultSet.getDate("createdAt").toLocalDate());
 				return Optional.of(task);
 			}
 			return Optional.empty();
@@ -68,7 +68,7 @@ public class TaskRepository implements ITaskRepository {
 				task.setDescription(resultSet.getString("description"));
 				task.setStatus(TaskStatus.valueOf(resultSet.getString("status")));
 				task.setProgress(resultSet.getInt("progress"));
-				task.setCreatedAt(resultSet.getTimestamp("createdAt").toLocalDateTime());
+				task.setCreatedAt( resultSet.getDate("createdAt").toLocalDate());
 				tasks.add(task);
 			}
 			return tasks;
@@ -89,7 +89,7 @@ public class TaskRepository implements ITaskRepository {
 					taskDTO.getDescription(),
 					0,
 					TaskStatus.PROGRESS,
-					LocalDateTime.now()
+					LocalDate.now()
 
 			);
 
@@ -98,7 +98,7 @@ public class TaskRepository implements ITaskRepository {
 			preparedStatement.setString(3, newTask.getDescription());
 			preparedStatement.setString(4, newTask.getStatus().name());
 			preparedStatement.setInt(5, newTask.getProgress());
-			preparedStatement.setTimestamp(6, Timestamp.valueOf(newTask.getCreatedAt()));
+			preparedStatement.setDate(6, java.sql.Date.valueOf(newTask.getCreatedAt()));
 			preparedStatement.executeUpdate();
 
 			return newTask;

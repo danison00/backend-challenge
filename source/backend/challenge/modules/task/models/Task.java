@@ -8,8 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
+
+import javax.xml.crypto.Data;
 
 @Getter
 @Setter
@@ -23,6 +28,6 @@ public class Task {
 	private String description;
 	private int progress;
 	private TaskStatus status;
-	private LocalDateTime createdAt;
+	private LocalDate createdAt;
 
 }

@@ -5,6 +5,9 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import backend.challenge.modules.task.dtos.TaskDTO;
+import backend.challenge.modules.task.exceptions.TaskAlterationNotAvaliable;
+import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.repositories.ITaskRepository;
 
@@ -19,21 +22,27 @@ public class UpdateTaskService implements IUpdateTaskService {
     }
 
     @Override
-    public Task execute(Task taskUp) {
+    public Task execute(Task taskUp) throws TaskNotFound, TaskAlterationNotAvaliable {
         Optional<Task> taskOpt = iTaskRepository.index(taskUp.getId());
 
         if (taskOpt.isEmpty())
-            throw new RuntimeException("Tarefa não encontrada.");
+            throw new TaskNotFound();
 
         Task task = taskOpt.get();
-        if (!taskUp.getId().equals(task.getId()) ||
-                !taskUp.getCreatedAt().equals(task.getCreatedAt()) ||
-                taskUp.getProgress() != task.getProgress() ||
-                !task.getStatus().equals(taskUp.getStatus())) throw new RuntimeException("É apenas possível alterar o Título e Descrição nesta operação.");
 
-    
+        if (taskUp.getCreatedAt() != null)
+            if (!taskUp.getCreatedAt().equals(task.getCreatedAt()))
+                throw new TaskAlterationNotAvaliable();
+        if (taskUp.getStatus() != null)
+            if (taskUp.getStatus().equals(task.getStatus()))
+                throw new TaskAlterationNotAvaliable();
 
+        if (taskUp.getProgress() != task.getProgress())
+            throw new TaskAlterationNotAvaliable();
+
+        task.setDescription(taskUp.getDescription());
+        task.setTitle(taskUp.getTitle());
         return this.iTaskRepository.update(task);
-    }
 
+    }
 }
