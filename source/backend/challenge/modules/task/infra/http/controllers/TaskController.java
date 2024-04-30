@@ -42,10 +42,10 @@ public class TaskController {
 
 	@GET
 	@Path("single/{taskId}")
-	public Response index(@PathParam("taskId") String taskId) {
+	public Response index(@PathParam("taskId") UUID taskId) {
 
 		try {
-			Task taskOpt = this.retrieveTaskByIdService.execute(UUID.fromString(taskId));
+			Task taskOpt = this.retrieveTaskByIdService.execute(taskId);
 			return DefaultResponse.ok().entity(taskOpt);
 
 		} catch (TaskNotFound e) {

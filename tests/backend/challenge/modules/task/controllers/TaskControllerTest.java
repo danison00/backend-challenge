@@ -90,7 +90,7 @@ public class TaskControllerTest {
                 LocalDate.of(2024, 4, 30));
 
         doReturn(task).when(retrieveTaskByIdService).execute(id);
-        Assert.assertEquals(task, controller.index(id.toString()).entity());
+        Assert.assertEquals(task, controller.index(id).entity());
 
     }
 
@@ -99,7 +99,7 @@ public class TaskControllerTest {
         UUID id = UUID.fromString("7a8853b1-7031-489a-b305-76e15b352154");
 
         when(retrieveTaskByIdService.execute(id)).thenThrow(new TaskNotFound());
-        Response response = controller.index(id.toString());
+        Response response = controller.index(id);
         assertEquals(400, response.statusCode());
         assertEquals(new TaskNotFound().getMessage(), response.entity());
 
