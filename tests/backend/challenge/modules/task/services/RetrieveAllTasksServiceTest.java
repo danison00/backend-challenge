@@ -3,19 +3,12 @@ package backend.challenge.modules.task.services;
 import backend.challenge.modules.task.enums.TaskStatus;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.repositories.ITaskRepository;
-import backend.challenge.modules.task.repositories.TaskRepository;
 import kikaha.core.test.KikahaRunner;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

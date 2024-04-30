@@ -1,15 +1,10 @@
 package backend.challenge.modules.task.services;
 
 import kikaha.core.test.KikahaRunner;
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
-
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import backend.challenge.modules.task.dtos.TaskDTO;
 import backend.challenge.modules.task.dtos.TaskProgressDTO;
 import backend.challenge.modules.task.enums.TaskStatus;
 import backend.challenge.modules.task.exceptions.ProgressTaskUpdateNotAvailable;

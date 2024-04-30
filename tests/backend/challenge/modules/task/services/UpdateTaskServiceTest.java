@@ -5,21 +5,12 @@ import backend.challenge.modules.task.exceptions.TaskAlterationNotAvailable;
 import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.repositories.ITaskRepository;
-import backend.challenge.modules.task.repositories.TaskRepository;
 import kikaha.core.test.KikahaRunner;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
-
-import javax.inject.Inject;
-
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

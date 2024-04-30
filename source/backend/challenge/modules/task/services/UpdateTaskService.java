@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import backend.challenge.modules.task.dtos.TaskDTO;
 import backend.challenge.modules.task.exceptions.TaskAlterationNotAvailable;
 import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.models.Task;

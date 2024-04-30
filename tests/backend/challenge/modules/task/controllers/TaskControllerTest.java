@@ -1,11 +1,8 @@
 package backend.challenge.modules.task.controllers;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +23,6 @@ import backend.challenge.modules.task.services.IRetrieveAllTasksService;
 import backend.challenge.modules.task.services.IRetrieveTaskByIdService;
 import backend.challenge.modules.task.services.IUpdateTaskService;
 import kikaha.core.test.KikahaRunner;
-import kikaha.urouting.api.DefaultResponse;
 import kikaha.urouting.api.Response;
 
 @RunWith(KikahaRunner.class)

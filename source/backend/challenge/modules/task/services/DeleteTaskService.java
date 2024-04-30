@@ -2,7 +2,6 @@ package backend.challenge.modules.task.services;
 
 import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.repositories.ITaskRepository;
-
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -4,15 +4,10 @@ import backend.challenge.modules.task.dtos.TaskDTO;
 import backend.challenge.modules.task.enums.TaskStatus;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.repositories.ITaskRepository;
-import backend.challenge.modules.task.repositories.TaskRepository;
 import kikaha.core.test.KikahaRunner;
-
 import static org.junit.Assert.assertEquals;
-
 import java.time.LocalDate;
 import java.util.UUID;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,9 +47,6 @@ public class CreateTaskServiceTest {
 		assertEquals(expectedTask, result);
 		Mockito.verify(taskRepository, Mockito.times(1)).create(taskDTO);
 
-		Task taskToUpdate = new Task(
-
-		);
 	}
 
 }

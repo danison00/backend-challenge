@@ -5,10 +5,7 @@ import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.repositories.ITaskRepository;
 import kikaha.core.test.KikahaRunner;
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
-
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
