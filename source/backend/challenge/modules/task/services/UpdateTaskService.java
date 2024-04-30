@@ -22,29 +22,15 @@ public class UpdateTaskService implements IUpdateTaskService {
     @Override
     public Task execute(Task taskUp) throws TaskNotFound, TaskAlterationNotAvailable {
         Optional<Task> taskOpt = iTaskRepository.index(taskUp.getId());
-
         if (taskOpt.isEmpty())
             throw new TaskNotFound();
 
         Task task = taskOpt.get();
 
-        if (taskUp.getId() != null)
-            if (!taskUp.getId().equals(task.getId()))
-                throw new TaskAlterationNotAvailable();
-
-        if (taskUp.getCreatedAt() != null)
-            if (!taskUp.getCreatedAt().equals(task.getCreatedAt()))
-                throw new TaskAlterationNotAvailable();
-        if (taskUp.getStatus() != null)
-            if (!taskUp.getStatus().equals(task.getStatus()))
-                throw new TaskAlterationNotAvailable();
-
-        if (taskUp.getProgress() != task.getProgress())
-            throw new TaskAlterationNotAvailable();
-
         task.setDescription(taskUp.getDescription());
         task.setTitle(taskUp.getTitle());
-        return this.iTaskRepository.update(task);
+        this.iTaskRepository.update(task);
+        return task;
 
     }
 }
