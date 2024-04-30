@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import backend.challenge.modules.task.dtos.TaskDTO;
-import backend.challenge.modules.task.exceptions.TaskAlterationNotAvaliable;
+import backend.challenge.modules.task.exceptions.TaskAlterationNotAvailable;
 import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.repositories.ITaskRepository;
@@ -22,7 +22,7 @@ public class UpdateTaskService implements IUpdateTaskService {
     }
 
     @Override
-    public Task execute(Task taskUp) throws TaskNotFound, TaskAlterationNotAvaliable {
+    public Task execute(Task taskUp) throws TaskNotFound, TaskAlterationNotAvailable {
         Optional<Task> taskOpt = iTaskRepository.index(taskUp.getId());
 
         if (taskOpt.isEmpty())
@@ -32,13 +32,13 @@ public class UpdateTaskService implements IUpdateTaskService {
 
         if (taskUp.getCreatedAt() != null)
             if (!taskUp.getCreatedAt().equals(task.getCreatedAt()))
-                throw new TaskAlterationNotAvaliable();
+                throw new TaskAlterationNotAvailable();
         if (taskUp.getStatus() != null)
             if (taskUp.getStatus().equals(task.getStatus()))
-                throw new TaskAlterationNotAvaliable();
+                throw new TaskAlterationNotAvailable();
 
         if (taskUp.getProgress() != task.getProgress())
-            throw new TaskAlterationNotAvaliable();
+            throw new TaskAlterationNotAvailable();
 
         task.setDescription(taskUp.getDescription());
         task.setTitle(taskUp.getTitle());

@@ -1,7 +1,7 @@
 package backend.challenge.modules.task.infra.http.controllers;
 
 import backend.challenge.modules.task.dtos.TaskDTO;
-import backend.challenge.modules.task.exceptions.TaskAlterationNotAvaliable;
+import backend.challenge.modules.task.exceptions.TaskAlterationNotAvailable;
 import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.infra.http.views.TaskView;
 import backend.challenge.modules.task.models.Task;
@@ -76,7 +76,7 @@ public class TaskController {
 			task.setTitle(taskDto.getTitle());
 			this.updateTaskService.execute(task);
 			return DefaultResponse.ok();
-		} catch (TaskAlterationNotAvaliable | TaskNotFound e) {
+		} catch (TaskAlterationNotAvailable| TaskNotFound e) {
 
 			return DefaultResponse.badRequest().entity(e.getMessage());
 		} catch (Exception e) {

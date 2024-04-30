@@ -1,6 +1,9 @@
 package backend.challenge.modules.task.infra.http.controllers;
 
 import backend.challenge.modules.task.dtos.TaskProgressDTO;
+import backend.challenge.modules.task.exceptions.ProgressTaskUpdateNotAvailable;
+import backend.challenge.modules.task.exceptions.TaskAlterationNotAvailable;
+import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.infra.http.views.TaskProgressView;
 import backend.challenge.modules.task.services.*;
 import kikaha.urouting.api.*;
@@ -24,9 +27,15 @@ public class TaskProgressController {
 	public Response updateProgress(@PathParam("taskId") String taskId, TaskProgressView taskProgressView) {
 		TaskProgressDTO progressDTO = TaskProgressDTO.create().setId(UUID.fromString(taskId))
 				.setProgress(taskProgressView.getProgress());
-		this.updateTaskProgressService.execute(progressDTO);
 
-		return DefaultResponse.ok();
+		try {
+			this.updateTaskProgressService.execute(progressDTO);
+			return DefaultResponse.ok();
+
+		} catch (ProgressTaskUpdateNotAvailable | TaskNotFound e) {
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		}
+
 	}
 
 }
