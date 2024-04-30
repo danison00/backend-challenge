@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,78 +30,132 @@ public class TaskRepository implements ITaskRepository {
 
 	@Override
 	public Optional<Task> index(final UUID taskId) {
-		// TODO: Criar método responsável por retornar tarefa por id
 		try (Connection connection = this.db.getConnection()) {
-            String sql = "SELECT id, title, description, createdAt FROM tasks WHERE id = ?";
+			String sql = "SELECT id, title, description, createdAt FROM tasks WHERE id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, taskId.toString());
-			
+
 			ResultSet resultSet = preparedStatement.executeQuery();
 			Task task = null;
-			if(resultSet.next()){
+			if (resultSet.next()) {
 				task = new Task();
 				task.setId(UUID.fromString(resultSet.getString("id")));
-                task.setTitle(resultSet.getString("title"));
-                task.setDescription(resultSet.getString("description"));
-                task.setCreatedAt(resultSet.getTimestamp("createdAt").toLocalDateTime());
+				task.setTitle(resultSet.getString("title"));
+				task.setDescription(resultSet.getString("description"));
+				task.setCreatedAt(resultSet.getTimestamp("createdAt").toLocalDateTime());
 				return Optional.of(task);
 			}
 			return Optional.empty();
-			
+
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
 	public List<Task> show() {
-		// TODO: Criar método responsável por retornar todas as tarefas
+		try (Connection connection = this.db.getConnection()) {
+			String sql = "SELECT id, title, description, createdAt FROM tasks";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			List<Task> tasks = new ArrayList<>();
+			while (resultSet.next()) {
+				Task task = new Task();
+				task.setId(UUID.fromString(resultSet.getString("id")));
+				task.setTitle(resultSet.getString("title"));
+				task.setDescription(resultSet.getString("description"));
+				task.setCreatedAt(resultSet.getTimestamp("createdAt").toLocalDateTime());
+				tasks.add(task);
+			}
+			return tasks;
 
-		return null;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public Task create(final TaskDTO taskDTO) {
-		// TODO: Criar método responsável por criar uma tarefa
 		try (Connection connection = this.db.getConnection()) {
 			String sql = "INSERT INTO tasks(id, title, description, createdAt) VALUES(?, ?, ?, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			Task newTask = new Task( 
-				UUID.randomUUID(),
-				taskDTO.getTitle(),
-				taskDTO.getDescription(),
-				0,
-				TaskStatus.PROGRESS,
-				LocalDateTime.now()
+			Task newTask = new Task(
+					UUID.randomUUID(),
+					taskDTO.getTitle(),
+					taskDTO.getDescription(),
+					0,
+					TaskStatus.PROGRESS,
+					LocalDateTime.now()
 
 			);
-			
+
 			preparedStatement.setString(1, newTask.getId().toString());
 			preparedStatement.setString(2, newTask.getTitle());
 			preparedStatement.setString(3, newTask.getDescription());
-			preparedStatement.setTimestamp(4,  Timestamp.valueOf(newTask.getCreatedAt()));
+			preparedStatement.setTimestamp(4, Timestamp.valueOf(newTask.getCreatedAt()));
 			preparedStatement.executeUpdate();
-			
+
 			return newTask;
-			
+
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-
 
 	}
 
 	@Override
 	public Task update(final Task task) {
-		// TODO: Criar método responsável por atualizar uma tarefa
 
-		return null;
+		try (Connection connection = this.db.getConnection()) {
+			String sql = "UPDATE tasks SET title = ?, description = ? WHERE id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+			preparedStatement.setString(1, task.getTitle());
+			preparedStatement.setString(2, task.getDescription());
+			preparedStatement.setString(3, task.getId().toString());
+			preparedStatement.executeUpdate();
+
+			return task;
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
-	public void delete(final Long taskId) {
-		// TODO: Criar método responsável por deletar tarefa por id
+	public void delete(final UUID taskId) {
+
+		try (Connection connection = this.db.getConnection()) {
+			String sql = "DELETE FROM tasks WHERE id=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, taskId.toString());
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	@Override
+	public boolean existsById(UUID id) {
+		try (Connection connection = this.db.getConnection()) {
+			String sql = "SELECT COUNT(*) FROM tasks WHERE id = ?";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, id.toString());
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				int count = resultSet.getInt(1);
+				resultSet.close();
+				System.out.println(count > 0);
+				return count > 0;
+			}
+			return false;
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 
 	}
 

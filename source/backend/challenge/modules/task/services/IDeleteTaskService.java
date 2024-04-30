@@ -1,8 +1,9 @@
 package backend.challenge.modules.task.services;
 
+import java.util.UUID;
 
 public interface IDeleteTaskService {
 
-	void execute(Long taskId);
+	void execute(UUID taskId);
 
 }

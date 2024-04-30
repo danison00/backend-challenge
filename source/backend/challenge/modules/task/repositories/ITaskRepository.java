@@ -13,6 +13,7 @@ public interface ITaskRepository {
 	List<Task> show();
 	Task create(TaskDTO taskDTO);
 	Task update(Task task);
-	void delete(Long taskId);
+	void delete(UUID taskId);
+	boolean existsById(UUID id);
 
 }
