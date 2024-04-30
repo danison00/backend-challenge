@@ -83,15 +83,17 @@ public class TaskController {
 			return DefaultResponse.serverError();
 		}
 
-		// return DefaultResponse.ok();
 	}
 
 	@DELETE
 	@Path("single/{taskId}")
 	public Response delete(@PathParam("taskId") String taskId) {
-
-		this.deleteTaskService.execute(UUID.fromString(taskId));
-		return DefaultResponse.ok();
+		try {
+			this.deleteTaskService.execute(UUID.fromString(taskId));
+			return DefaultResponse.ok();
+		} catch (TaskNotFound e) {
+			return DefaultResponse.badRequest().entity(e.getMessage());
+		}
 	}
 
 }

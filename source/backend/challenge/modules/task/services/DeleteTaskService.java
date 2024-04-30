@@ -1,5 +1,6 @@
 package backend.challenge.modules.task.services;
 
+import backend.challenge.modules.task.exceptions.TaskNotFound;
 import backend.challenge.modules.task.repositories.ITaskRepository;
 
 import java.util.UUID;
@@ -17,9 +18,9 @@ public class DeleteTaskService implements IDeleteTaskService {
 	}
 
 	@Override
-	public void execute(UUID taskId) {
+	public void execute(UUID taskId) throws TaskNotFound{
 
-		if(taskRepository.existsById(taskId)) return;
+		if(!taskRepository.existsById(taskId)) throw new TaskNotFound();
 
 		this.taskRepository.delete(taskId);
 	}
