@@ -25,19 +25,18 @@ public class TaskController {
 			final ICreateTaskService createTaskService,
 			final IDeleteTaskService deleteTaskService,
 			final IRetrieveAllTasksService retrieveAllTasksService,
-			final RetrieveTaskByIdService retrieveTaskByIdService) {
+			final IRetrieveTaskByIdService retrieveTaskByIdService,
+			final IUpdateTaskService iUpdateTaskService) {
 		this.createTaskService = createTaskService;
 		this.deleteTaskService = deleteTaskService;
 		this.retrieveAllTasksService = retrieveAllTasksService;
 		this.retrieveTaskByIdService = retrieveTaskByIdService;
-		this.updateTaskService = null;
+		this.updateTaskService = iUpdateTaskService;
 	}
 
 	@GET
 	public Response show() {
-
 		this.retrieveAllTasksService.execute();
-
 		return DefaultResponse.ok().entity(retrieveAllTasksService.execute());
 	}
 
@@ -62,22 +61,19 @@ public class TaskController {
 
 	@PUT
 	@Path("single/{taskId}")
-	public Response update(@PathParam("taskId") Long taskId, Task task) {
-		/*
-		 * TODO: A rota deve alterar apenas o title e description da tarefa
-		 * que possua o id igual ao id correspondente nos parâmetros da rota.
-		 */
+	public Response update(@PathParam("taskId") String taskId, Task task) {
+
+		this.updateTaskService.execute(task);
 
 		return DefaultResponse.ok().entity("Hello world");
 	}
 
 	@DELETE
 	@Path("single/{taskId}")
-	public Response delete(@PathParam("taskId") Long taskId) {
-		// TODO: A rota deve deletar a tarefa com o id correspondente nos parâmetros da
-		// rota
+	public Response delete(@PathParam("taskId") String taskId) {
 
-		return DefaultResponse.ok().entity("Hello world");
+		this.deleteTaskService.execute(UUID.fromString(taskId));
+		return DefaultResponse.ok();
 	}
 
 }
