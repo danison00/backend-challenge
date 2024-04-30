@@ -7,7 +7,6 @@ import backend.challenge.modules.task.infra.http.views.TaskView;
 import backend.challenge.modules.task.models.Task;
 import backend.challenge.modules.task.services.*;
 import kikaha.urouting.api.*;
-import java.util.Optional;
 import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -66,11 +65,11 @@ public class TaskController {
 
 	@PUT
 	@Path("single/{taskId}")
-	public Response update(@PathParam("taskId") String taskId, TaskDTO taskDto) {
+	public Response update(@PathParam("taskId") UUID taskId, TaskDTO taskDto) {
 
 		try {
 			Task task = new Task();
-			task.setId(UUID.fromString(taskId));
+			task.setId(taskId);
 			task.setDescription(taskDto.getDescription());
 			task.setTitle(taskDto.getTitle());
 			this.updateTaskService.execute(task);
@@ -86,9 +85,9 @@ public class TaskController {
 
 	@DELETE
 	@Path("single/{taskId}")
-	public Response delete(@PathParam("taskId") String taskId) {
+	public Response delete(@PathParam("taskId") UUID taskId) {
 		try {
-			this.deleteTaskService.execute(UUID.fromString(taskId));
+			this.deleteTaskService.execute(taskId);
 			return DefaultResponse.ok();
 		} catch (TaskNotFound e) {
 			return DefaultResponse.badRequest().entity(e.getMessage());

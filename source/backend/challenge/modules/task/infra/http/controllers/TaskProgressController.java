@@ -24,8 +24,8 @@ public class TaskProgressController {
 
 	@PUT
 	@Path("single/{taskId}")
-	public Response updateProgress(@PathParam("taskId") String taskId, TaskProgressView taskProgressView) {
-		TaskProgressDTO progressDTO = TaskProgressDTO.create().setId(UUID.fromString(taskId))
+	public Response updateProgress(@PathParam("taskId") UUID taskId, TaskProgressView taskProgressView) {
+		TaskProgressDTO progressDTO = TaskProgressDTO.create().setId(taskId)
 				.setProgress(taskProgressView.getProgress());
 
 		try {
