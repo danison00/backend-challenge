@@ -1,5 +1,7 @@
 package backend.challenge.modules.task.services;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -17,9 +19,21 @@ public class UpdateTaskService implements IUpdateTaskService {
     }
 
     @Override
-    public Task execute(Task task) {
+    public Task execute(Task taskUp) {
+        Optional<Task> taskOpt = iTaskRepository.index(taskUp.getId());
 
-       return this.iTaskRepository.update(task);
+        if (taskOpt.isEmpty())
+            throw new RuntimeException("Tarefa não encontrada.");
+
+        Task task = taskOpt.get();
+        if (!taskUp.getId().equals(task.getId()) ||
+                !taskUp.getCreatedAt().equals(task.getCreatedAt()) ||
+                taskUp.getProgress() != task.getProgress() ||
+                !task.getStatus().equals(taskUp.getStatus())) throw new RuntimeException("É apenas possível alterar o Título e Descrição nesta operação.");
+
+    
+
+        return this.iTaskRepository.update(task);
     }
 
 }

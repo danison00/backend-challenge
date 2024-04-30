@@ -31,7 +31,7 @@ public class TaskRepository implements ITaskRepository {
 	@Override
 	public Optional<Task> index(final UUID taskId) {
 		try (Connection connection = this.db.getConnection()) {
-			String sql = "SELECT id, title, description, createdAt FROM tasks WHERE id = ?";
+			String sql = "SELECT id, title, description, status, progress, createdAt FROM tasks WHERE id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, taskId.toString());
 
@@ -42,6 +42,8 @@ public class TaskRepository implements ITaskRepository {
 				task.setId(UUID.fromString(resultSet.getString("id")));
 				task.setTitle(resultSet.getString("title"));
 				task.setDescription(resultSet.getString("description"));
+				task.setStatus(TaskStatus.valueOf(resultSet.getString("status")));
+				task.setProgress(resultSet.getInt("progress"));
 				task.setCreatedAt(resultSet.getTimestamp("createdAt").toLocalDateTime());
 				return Optional.of(task);
 			}
@@ -55,7 +57,7 @@ public class TaskRepository implements ITaskRepository {
 	@Override
 	public List<Task> show() {
 		try (Connection connection = this.db.getConnection()) {
-			String sql = "SELECT id, title, description, createdAt FROM tasks";
+			String sql = "SELECT id, title, description, status, progress, createdAt FROM tasks";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			List<Task> tasks = new ArrayList<>();
@@ -64,6 +66,8 @@ public class TaskRepository implements ITaskRepository {
 				task.setId(UUID.fromString(resultSet.getString("id")));
 				task.setTitle(resultSet.getString("title"));
 				task.setDescription(resultSet.getString("description"));
+				task.setStatus(TaskStatus.valueOf(resultSet.getString("status")));
+				task.setProgress(resultSet.getInt("progress"));
 				task.setCreatedAt(resultSet.getTimestamp("createdAt").toLocalDateTime());
 				tasks.add(task);
 			}
@@ -77,7 +81,7 @@ public class TaskRepository implements ITaskRepository {
 	@Override
 	public Task create(final TaskDTO taskDTO) {
 		try (Connection connection = this.db.getConnection()) {
-			String sql = "INSERT INTO tasks(id, title, description, createdAt) VALUES(?, ?, ?, ?)";
+			String sql = "INSERT INTO tasks(id, title, description, status, progress, createdAt) VALUES(?, ?, ?, ?, ?, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			Task newTask = new Task(
 					UUID.randomUUID(),
@@ -92,7 +96,9 @@ public class TaskRepository implements ITaskRepository {
 			preparedStatement.setString(1, newTask.getId().toString());
 			preparedStatement.setString(2, newTask.getTitle());
 			preparedStatement.setString(3, newTask.getDescription());
-			preparedStatement.setTimestamp(4, Timestamp.valueOf(newTask.getCreatedAt()));
+			preparedStatement.setString(4, newTask.getStatus().name());
+			preparedStatement.setInt(5, newTask.getProgress());
+			preparedStatement.setTimestamp(6, Timestamp.valueOf(newTask.getCreatedAt()));
 			preparedStatement.executeUpdate();
 
 			return newTask;
@@ -105,14 +111,16 @@ public class TaskRepository implements ITaskRepository {
 
 	@Override
 	public Task update(final Task task) {
-
+	System.out.println(task.toString());
 		try (Connection connection = this.db.getConnection()) {
-			String sql = "UPDATE tasks SET title = ?, description = ? WHERE id = ?";
+			String sql = "UPDATE tasks SET title = ?, description = ?, status = ?, progress = ? WHERE id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
 			preparedStatement.setString(1, task.getTitle());
 			preparedStatement.setString(2, task.getDescription());
-			preparedStatement.setString(3, task.getId().toString());
+			preparedStatement.setString(3, task.getStatus().name());
+			preparedStatement.setInt(4, task.getProgress());
+			preparedStatement.setString(5, task.getId().toString());
 			preparedStatement.executeUpdate();
 
 			return task;
